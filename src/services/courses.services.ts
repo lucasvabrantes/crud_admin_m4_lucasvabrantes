@@ -28,13 +28,49 @@ const reaAllCourses = async (): Promise<CourseReadAll> => {
     return allCoursesSchema.parse(query.rows);
 };
 
-const enrollUser = async (courseId: string, userId: string): Promise<any> => {
-    const query: QueryResult = await client.query(
-        `INSERT INTO "userCourses" ("courseId","userId") VALUES ($1, $2) RETURNING *;`,
+const enrollUser = async (courseId: string, userId: string): Promise<void> => {
+    await client.query(
+        `INSERT INTO "userCourses" ("courseId","userId") VALUES ($1, $2);`,
         [courseId, userId]
     );
 
-    console.log(query);
+    return;
 };
 
-export default { create, reaAllCourses, enrollUser };
+const destroyCourse = async (
+    courseId: string,
+    userId: string
+): Promise<void> => {
+    const queryString: string = `UPDATE "userCourses" SET "active" = 
+    false  WHERE "courseId" = $1 AND "userId" = $2 ;`;
+    await client.query(queryString, [courseId, userId]);
+};
+
+const readUsersByCourse = async (courseId: string): Promise<void> => {
+    const query: string = `SELECT 
+    "u"."id" AS "userId",
+    "u"."name" AS "userName",
+    "c"."id" AS "courseId",
+    "c"."name" AS "courseName",
+    "c"."description"AS "courseDescription",
+    "uc"."active" AS "userActiveInCourse"
+        FROM "courses" AS "c"
+        JOIN "userCourses" AS "uc"
+            ON "uc"."courseId" = "c"."id"
+        JOIN "users" AS "u"
+            ON "u"."id" = "uc"."userId"
+        WHERE "c"."id" = $1;`;
+
+    const queryResult: QueryResult = await client.query(query, [courseId]);
+    const usersList: any = queryResult.rows;
+
+    return usersList;
+};
+
+export default {
+    create,
+    reaAllCourses,
+    enrollUser,
+    destroyCourse,
+    readUsersByCourse,
+};

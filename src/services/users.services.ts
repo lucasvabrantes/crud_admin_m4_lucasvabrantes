@@ -31,13 +31,13 @@ const readALl = async (): Promise<UserReadAll> => {
     return userReadSchema.parse(query.rows);
 };
 
-const readUserCourses = async (userId: string): Promise<UserReadAll> => {
+const readUserCourses = async (userId: string): Promise<Array<object>> => {
     const queryString: UserResult = await client.query(
         `SELECT 
     "c"."id" AS "courseId",
     "c"."name" AS "courseName",
     "c"."description"AS "courseDescription",
-    "uc"."active" AS "userActiveinCourse",
+    "uc"."active" AS "userActiveInCourse",
     "uc"."userId",
     "u"."name" AS "userName"
         FROM "users" AS "u"
@@ -48,6 +48,10 @@ const readUserCourses = async (userId: string): Promise<UserReadAll> => {
         WHERE "u"."id" = $1;`,
         [userId]
     );
+
+    if (!queryString) {
+        throw new AppError("User/course not found", 404);
+    }
 
     if (!queryString.rowCount) {
         throw new AppError("No course found", 404);

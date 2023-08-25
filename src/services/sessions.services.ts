@@ -1,11 +1,11 @@
 import { sign } from "jsonwebtoken";
 import { client } from "../database";
 import { compare } from "bcryptjs";
-import { User, UserCreate, UserResult } from "../interfaces/user.interface";
+import { User, UserResult } from "../interfaces/user.interface";
 import AppError from "../errors/AppError";
 import { SessionCreate, SessionReturn } from "../interfaces/session.interface";
 
-const create = async (payload: UserCreate): Promise<SessionReturn> => {
+const create = async (payload: SessionCreate): Promise<SessionReturn> => {
     const query: UserResult = await client.query(
         'SELECT * FROM "users" WHERE "email" = $1;',
         [payload.email]

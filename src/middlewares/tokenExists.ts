@@ -3,7 +3,7 @@ import { verify } from "jsonwebtoken";
 import AppError from "../errors/AppError";
 
 const tokenExists = (req: Request, res: Response, next: NextFunction): void => {
-    const authorization: string | undefined = req.headers.authorization;
+    const authorization: string | undefined = req.get("authorization");
     if (!authorization) throw new AppError("Missing bearer token", 401);
 
     const token: string = authorization.split(" ")[1];

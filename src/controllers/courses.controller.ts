@@ -22,4 +22,29 @@ const enrollUser = async (req: Request, res: Response): Promise<Response> => {
     return res.status(201).json({ message });
 };
 
-export default { create, readAllCourses, enrollUser };
+const destroyCourse = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
+    await coursesServices.destroyCourse(req.params.courseId, req.params.userId);
+    return res.status(204).send();
+};
+
+const readUsersByCourse = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
+    const usersByCourse = await coursesServices.readUsersByCourse(
+        req.params.courseId
+    );
+
+    return res.status(200).json(usersByCourse);
+};
+
+export default {
+    create,
+    readAllCourses,
+    enrollUser,
+    destroyCourse,
+    readUsersByCourse,
+};
