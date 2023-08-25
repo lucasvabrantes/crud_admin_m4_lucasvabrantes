@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { sessionCreateSchema } from "../schemas/session.schemas";
-import { validateBody } from "../middlewares/validateBody.middleware";
 import sessionController from "../controllers/session.controller";
+import validateBody from "../middlewares/validateBody.middleware";
 
 export const sessionRouter: Router = Router();
 

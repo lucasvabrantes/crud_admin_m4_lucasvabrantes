@@ -14,7 +14,7 @@ const handleErrors = (
     }
 
     if (error instanceof ZodError) {
-        return res.status(400).json({ message: error.flatten().fieldErrors });
+        return res.status(400).json(error.flatten().fieldErrors);
     }
 
     if (error instanceof JsonWebTokenError) {

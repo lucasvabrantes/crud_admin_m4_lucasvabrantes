@@ -7,16 +7,17 @@ const create = async (req: Request, res: Response): Promise<Response> => {
     return res.status(201).json(user);
 };
 
-const login = async (req: Request, res: Response): Promise<Response> => {
-    return res.status(200).json();
-};
-
 const readAll = async (req: Request, res: Response): Promise<Response> => {
-    return res.status(200).json();
+    const allUsers = await usersServices.readALl();
+    return res.status(200).json(allUsers);
 };
 
-const userCourses = async (req: Request, res: Response): Promise<Response> => {
-    return res.status(200).json();
+const readUserCourses = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
+    const userCourses: any = await usersServices.readUserCourses(req.params.id);
+    return res.status(200).json(userCourses);
 };
 
-export default { create, login, readAll, userCourses };
+export default { create, readAll, readUserCourses };

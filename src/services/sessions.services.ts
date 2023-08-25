@@ -22,7 +22,7 @@ const create = async (payload: UserCreate): Promise<SessionReturn> => {
     );
 
     if (!samePassword) {
-        throw new AppError("Username or password is incorrect.", 401);
+        throw new AppError("Wrong email/password", 401);
     }
 
     const token: string = sign(

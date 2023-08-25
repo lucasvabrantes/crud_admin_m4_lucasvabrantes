@@ -2,13 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import AppError from "../errors/AppError";
 
-const isAdminToken = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-): void => {
+const tokenExists = (req: Request, res: Response, next: NextFunction): void => {
     const authorization: string | undefined = req.headers.authorization;
-    if (!authorization) throw new AppError("Missing bearer token.", 401);
+    if (!authorization) throw new AppError("Missing bearer token", 401);
 
     const token: string = authorization.split(" ")[1];
     const decoded = verify(token, process.env.SECRET_KEY!);
@@ -18,4 +14,4 @@ const isAdminToken = (
     return next();
 };
 
-export default isAdminToken;
+export default tokenExists;
